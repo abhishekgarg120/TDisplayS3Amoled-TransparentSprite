@@ -17,8 +17,11 @@ LilyGo_Class amoled;
 #define HEIGHT amoled.width()
 
 
-int x = 0;
-int y = 56;
+int moonX = 0;
+int moonY = 20;
+int spiderX = 0;
+int spiderY = 0;
+int spiderRot = 0;
 
 void setup() {
   amoled.begin();
@@ -27,28 +30,40 @@ void setup() {
   sprite.setSwapBytes(true);
   
   moonSprite.createSprite(128, 128);
-  spiderSprite.createSprite(128, 128);  
+  spiderSprite.createSprite(128, 128);
 
-  draw();  
+  draw();
 }
 
 void draw(){
   sprite.fillSprite(TFT_BLACK);
-
   
   moonSprite.pushImage(0, 0, 128, 128, FullMoon);
-  moonSprite.pushToSprite(&sprite, 20, 20, TFT_WHITE);
+  moonSprite.pushToSprite(&sprite, moonX, moonY, TFT_WHITE);
 
   spiderSprite.pushImage(0, 0, 128, 128, Spider);
-  spiderSprite.pushToSprite(&sprite, x, y, TFT_WHITE);
+  spiderSprite.pushToSprite(&sprite, spiderX, spiderY, TFT_WHITE);
 
   amoled.pushColors(0, 0, WIDTH, HEIGHT, (uint16_t*)sprite.getPointer());
 }
 
 void loop() {
-  x++;
-  if (x > WIDTH){
-    x=-128;
+  moonX++;
+  spiderX += 3;
+  spiderRot++;
+
+  if (moonX > WIDTH){
+    moonX=-128;
   }
+
+  if (spiderX > WIDTH){
+    spiderX=-128;
+    spiderY = random(112);
+  }
+
+  if (spiderRot == 360) {
+    spiderRot = 0;
+  }
+
   draw();
 }
